@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link } from 'react-router-dom';
 import Library from './pages/Library';
 import Reader from './pages/Reader';
 import Vocabulary from './pages/Vocabulary';
@@ -14,10 +14,12 @@ function App() {
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <nav className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-brand-600 tracking-tight">LingQ Clone</div>
+          <Link to="/" className="text-2xl font-bold text-brand-600 tracking-tight hover:text-brand-700">
+            LingQ
+          </Link>
           <div className="space-x-4">
-            <a href="/review" className="text-gray-600 hover:text-brand-600 font-medium">Review</a>
-            <a href="/import" className="text-gray-600 hover:text-brand-600 font-medium">Import</a>
+            <Link to="/review" className="text-gray-600 hover:text-brand-600 font-medium">Review</Link>
+            <Link to="/import" className="text-gray-600 hover:text-brand-600 font-medium">Import</Link>
           </div>
         </div>
       </nav>
