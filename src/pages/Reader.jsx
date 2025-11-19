@@ -6,6 +6,7 @@ import { useVocabulary } from '../context/VocabularyContext';
 import TextRenderer from '../components/TextRenderer';
 import { translateText, playTextToSpeech } from '../services/TranslationService';
 import { buildSentenceTranslationMap, setSentenceTranslationInCache } from '../utils/sentenceCache';
+import { getArticleProgress, setArticleProgress } from '../utils/progressStorage';
 
 const splitSentences = (text) => {
     if (!text) return [];
@@ -16,19 +17,28 @@ const splitSentences = (text) => {
         .filter(Boolean);
 };
 
-const LearningMode = ({ sentences, language, settings }) => {
+const deriveStartIndex = (completed, total) => {
+    if (total === 0) return 0;
+    if (!completed || completed <= 0) return 0;
+    return Math.min(total - 1, Math.max(0, completed - 1));
+};
+
+const LearningMode = ({ sentences, language, settings, initialCompleted = 0, onProgressChange }) => {
     const initialCache = useMemo(() => buildSentenceTranslationMap(sentences, language), [sentences, language]);
-    const [index, setIndex] = useState(0);
-    const [sentenceTranslation, setSentenceTranslation] = useState(initialCache[0] ?? null);
+    const total = sentences.length;
+    const [index, setIndex] = useState(deriveStartIndex(initialCompleted, total));
+    const [sentenceTranslation, setSentenceTranslation] = useState(initialCache[deriveStartIndex(initialCompleted, total)] ?? null);
     const [translationLoading, setTranslationLoading] = useState(false);
     const [translationCache, setTranslationCache] = useState(initialCache);
-    useEffect(() => {
-        setIndex(0);
-        setTranslationCache(initialCache);
-        setSentenceTranslation(initialCache[0] ?? null);
-    }, [initialCache]);
-    const total = sentences.length;
+    const [maxCompleted, setMaxCompleted] = useState(initialCompleted);
 
+    useEffect(() => {
+        const startIdx = deriveStartIndex(initialCompleted, total);
+        setIndex(startIdx);
+        setTranslationCache(initialCache);
+        setSentenceTranslation(initialCache[startIdx] ?? null);
+        setMaxCompleted(initialCompleted);
+    }, [initialCompleted, initialCache, total]);
     if (total === 0) {
         return (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-gray-500">
@@ -38,6 +48,16 @@ const LearningMode = ({ sentences, language, settings }) => {
     }
 
     const currentSentence = sentences[index];
+
+    const updateProgress = (completed) => {
+        setMaxCompleted(prev => {
+            const nextValue = Math.max(prev, completed);
+            if (nextValue !== prev && onProgressChange) {
+                onProgressChange(nextValue);
+            }
+            return nextValue;
+        });
+    };
 
     const resetTranslation = (nextIndex) => {
         if (translationCache[nextIndex] !== undefined) {
@@ -60,6 +80,7 @@ const LearningMode = ({ sentences, language, settings }) => {
         setIndex(prev => {
             const nextIdx = Math.min(total - 1, prev + 1);
             resetTranslation(nextIdx);
+            updateProgress(nextIdx + 1);
             return nextIdx;
         });
     };
@@ -168,6 +189,19 @@ export default function Reader() {
     const [validationStatus, setValidationStatus] = useState(null);
     const [mode, setMode] = useState('reading');
     const article = getArticle(id);
+    const [completedSentences, setCompletedSentences] = useState(() => (article ? getArticleProgress(article.id) : 0));
+
+    useEffect(() => {
+        if (article?.id !== undefined) {
+            setCompletedSentences(getArticleProgress(article.id));
+        }
+    }, [article?.id]);
+
+    const handleProgressChange = (value) => {
+        if (article?.id === undefined) return;
+        setCompletedSentences(value);
+        setArticleProgress(article.id, value);
+    };
 
     if (!article) return <div>Article not found</div>;
 
@@ -347,7 +381,13 @@ export default function Reader() {
                     <TextRenderer text={article.content} language={article.language} />
                 </div>
             ) : (
-                <LearningMode sentences={sentences} language={article.language} settings={settings} />
+                <LearningMode
+                    sentences={sentences}
+                    language={article.language}
+                    settings={settings}
+                    initialCompleted={completedSentences}
+                    onProgressChange={handleProgressChange}
+                />
             )}
         </div>
     );

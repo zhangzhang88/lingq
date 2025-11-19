@@ -376,9 +376,15 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                         `}
                         title={s.label}
                     >
-                        {s.label === '✔' ? '✓' : s.level}
+                        {s.label === '✔' ? '5' : s.level}
                     </button>
                 ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 mb-2">
+                <div className="px-2 py-1 bg-gray-50 rounded border border-gray-200">1（红色）：困难</div>
+                <div className="px-2 py-1 bg-gray-50 rounded border border-gray-200">5（白色）：已知</div>
+                <div className="col-span-2 px-2 py-1 bg-gray-50 rounded border border-gray-200">2~4（橙/黄/绿）：LingQs 熟悉度阶段</div>
             </div>
 
             {/* Close button (optional, clicking outside usually handles this) */}
