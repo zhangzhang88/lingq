@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f0f9ff;
+  --color-brand-100: #e0f2fe;
+  --color-brand-200: #bae6fd;
+  --color-brand-300: #7dd3fc;
+  --color-brand-400: #38bdf8;
+  --color-brand-500: #0ea5e9;
+  --color-brand-600: #0284c7;
+  --color-brand-700: #0369a1;
+  --color-brand-800: #075985;
+  --color-brand-900: #0c4a6e;
+
+  --color-status-new: #dbeafe;
+  --color-status-1: #fee2e2;
+  --color-status-2: #ffedd5;
+  --color-status-3: #fef9c3;
+  --color-status-4: #dcfce7;
+  --color-status-known: #ffffff;
+}
+
+@utility perspective-1000 {
+  perspective: 1000px;
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@utility backface-hidden {
+  backface-visibility: hidden;
+}
+
+@utility rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 font-sans antialiased;
+}
+
+::selection {
+  @apply bg-brand-100 text-gray-900;
+}
