@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { translateText, openExternalTranslate, openGoogleTranslate, getDictionaryData, playTextToSpeech } from '../services/TranslationService';
 import { useSettings } from '../context/SettingsContext';
 import { useVocabulary } from '../context/VocabularyContext';
+import { getSentenceTranslationFromCache, setSentenceTranslationInCache } from '../utils/sentenceCache';
 
 const splitIntoSentences = (text = '') => {
     const result = [];
@@ -114,7 +115,8 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
             setLoading(true);
             setTranslationData(null);
             setDictionaryData(null);
-            setSentenceTranslation(null);
+            const cachedSentenceTranslation = word.sentence ? getSentenceTranslationFromCache(word.sentence, language) : null;
+            setSentenceTranslation(cachedSentenceTranslation || null);
             setTranslationDirty(false);
 
             const savedWordData = getWordData(word.text);
@@ -184,11 +186,17 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
 
     const handleTranslateSentence = async () => {
         if (!word.sentence) return;
+        const sessionCached = getSentenceTranslationFromCache(word.sentence, language);
+        if (sessionCached) {
+            setSentenceTranslation(sessionCached);
+            return;
+        }
         const translationProvider = settings.translationProvider || 'default';
         const targetLang = settings.targetLanguage || 'zh-Hans';
         const cachedSentence = getCachedSentenceTranslation(word.sentence, targetLang, translationProvider);
         if (cachedSentence) {
             setSentenceTranslation(cachedSentence);
+            setSentenceTranslationInCache(word.sentence, language, cachedSentence);
             return;
         }
         setLoadingSentence(true);
@@ -197,10 +205,12 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
             deepseekApiKey: settings.deepseekApiKey,
             deepseekModel: settings.deepseekModel
         });
-        setSentenceTranslation(res?.text);
+        const text = res?.text || '翻译失败';
+        setSentenceTranslation(text);
         if (res?.text) {
             saveSentenceTranslation(word.sentence, res, targetLang, translationProvider);
         }
+        setSentenceTranslationInCache(word.sentence, language, text);
         setLoadingSentence(false);
     };
 
