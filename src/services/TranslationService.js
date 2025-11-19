@@ -307,56 +307,63 @@ export const getDictionaryData = async (text, sourceLangName, accent = 'us') => 
 export const playTextToSpeech = (text, langName, accent = 'us') => {
     const langCode = getLangCode(langName);
 
-    if ('speechSynthesis' in window) {
-        // Cancel any currently playing speech
-        window.speechSynthesis.cancel();
+    if (!('speechSynthesis' in window)) {
+        alert('当前浏览器不支持语音朗读。请尝试使用 Chrome、Edge 或 Safari。');
+        return;
+    }
 
-        const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.cancel();
 
-        // Map our simple codes to BCP 47 tags
-        const localeMap = {
-            'en': accent === 'uk' ? 'en-GB' : 'en-US',
-            'fr': 'fr-FR',
-            'es': 'es-ES',
-            'de': 'de-DE',
-            'zh': 'zh-CN',
-            'ja': 'ja-JP',
-            'ko': 'ko-KR',
-            'it': 'it-IT',
-            'ru': 'ru-RU'
-        };
+    const utterance = new SpeechSynthesisUtterance(text);
+    const localeMap = {
+        'en': accent === 'uk' ? 'en-GB' : 'en-US',
+        'fr': 'fr-FR',
+        'es': 'es-ES',
+        'de': 'de-DE',
+        'zh': 'zh-CN',
+        'ja': 'ja-JP',
+        'ko': 'ko-KR',
+        'it': 'it-IT',
+        'ru': 'ru-RU'
+    };
+    const targetLang = localeMap[langCode] || langCode;
+    utterance.lang = targetLang;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
 
-        const targetLang = localeMap[langCode] || langCode;
-        utterance.lang = targetLang;
+    const preferredKeywords = ['Google', 'Microsoft', 'Apple', 'Premium', 'Enhanced', 'Natural'];
 
-        // Try to select a high-quality voice
+    const assignVoiceAndSpeak = () => {
         const voices = window.speechSynthesis.getVoices();
+        if (voices.length) {
+            const selectedVoice = voices.find(voice => {
+                if (!voice.lang.toLowerCase().startsWith(targetLang.split('-')[0].toLowerCase())) return false;
+                if (targetLang.includes('-')) {
+                    const localeSuffix = targetLang.split('-')[1].toLowerCase();
+                    if (!voice.lang.toLowerCase().includes(localeSuffix)) return false;
+                }
+                return preferredKeywords.some(keyword => voice.name.includes(keyword));
+            }) || voices.find(voice => voice.lang.toLowerCase().startsWith(targetLang.split('-')[0].toLowerCase()));
 
-        // Priority keywords for better voices
-        const preferredKeywords = ['Google', 'Microsoft', 'Apple', 'Premium', 'Enhanced', 'Natural'];
-
-        const selectedVoice = voices.find(voice => {
-            // Must match the target language
-            if (!voice.lang.startsWith(targetLang.split('-')[0])) return false;
-
-            // If specific locale is requested (e.g. en-GB), prefer exact match
-            if (targetLang.includes('-') && !voice.lang.includes(targetLang.split('-')[1])) {
-                // If we want GB but voice is US, skip unless it's the only option later
-                return false;
-            }
-
-            // Check for preferred keywords
-            return preferredKeywords.some(keyword => voice.name.includes(keyword));
-        });
-
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
+            if (selectedVoice) utterance.voice = selectedVoice;
         }
 
-        // Adjust rate/pitch for better naturalness
-        utterance.rate = 0.9; // Slightly slower is usually clearer
-        utterance.pitch = 1.0;
-
         window.speechSynthesis.speak(utterance);
+    };
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+        const handleVoicesChanged = () => {
+            assignVoiceAndSpeak();
+            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+        };
+        window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+        setTimeout(() => {
+            if (window.speechSynthesis.getVoices().length > 0) {
+                handleVoicesChanged();
+            }
+        }, 250);
+    } else {
+        assignVoiceAndSpeak();
     }
 };
