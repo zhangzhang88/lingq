@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useArticles } from '../context/ArticleContext';
 import { useVocabulary } from '../context/VocabularyContext';
 import { getArticleProgress } from '../utils/progressStorage';
+import { exportUserData, importUserData } from '../utils/dataBackup';
 
 const WORD_SPLIT_REGEX = /([a-zA-Z0-9À-ÿ]+(?:['’][a-zA-Z0-9À-ÿ]+)*)/;
 const WORD_ONLY_REGEX = /^[a-zA-Z0-9À-ÿ]+(?:['’][a-zA-Z0-9À-ÿ]+)*$/;
@@ -49,12 +50,58 @@ const splitSentences = (text) => {
 export default function Library() {
     const { articles, deleteArticle } = useArticles();
     const { getStatus } = useVocabulary();
+    const fileInputRef = useRef(null);
+    const [backupStatus, setBackupStatus] = useState(null);
 
     const handleDelete = (e, articleId, articleTitle) => {
         e.preventDefault();
         if (window.confirm(`确定要删除文章 "${articleTitle}" 吗？`)) {
             deleteArticle(articleId);
         }
+    };
+
+    const handleExport = () => {
+        try {
+            const payload = exportUserData();
+            if (!payload) throw new Error('无法读取本地数据。');
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `lingq-backup-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            setBackupStatus({ type: 'success', message: '已导出学习数据。' });
+        } catch (err) {
+            console.error('Export failed', err);
+            setBackupStatus({ type: 'error', message: '导出失败，请重试。' });
+        }
+    };
+
+    const handleImportClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImportFile = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                importUserData(data);
+                setBackupStatus({ type: 'success', message: '导入成功，页面将自动刷新。' });
+                setTimeout(() => window.location.reload(), 800);
+            } catch (err) {
+                console.error('Import failed', err);
+                setBackupStatus({ type: 'error', message: '导入失败，请检查文件内容。' });
+            } finally {
+                event.target.value = '';
+            }
+        };
+        reader.readAsText(file);
     };
 
     return (
@@ -65,6 +112,39 @@ export default function Library() {
                     My Vocabulary
                 </Link>
             </header>
+
+            <div className="mb-8 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">备份 / 导入学习数据</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">导出全部文章、词汇、翻译缓存等数据，清空浏览器后可再导入恢复。</p>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleExport}
+                        className="px-4 py-2 text-sm font-medium rounded-lg border border-brand-500 text-brand-600 dark:text-brand-200 hover:bg-brand-50 dark:hover:bg-brand-900/20"
+                    >
+                        导出数据
+                    </button>
+                    <button
+                        onClick={handleImportClick}
+                        className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    >
+                        导入数据
+                    </button>
+                    <input
+                        type="file"
+                        accept="application/json"
+                        ref={fileInputRef}
+                        onChange={handleImportFile}
+                        className="hidden"
+                    />
+                </div>
+            </div>
+            {backupStatus && (
+                <div className={`mb-6 text-sm ${backupStatus.type === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                    {backupStatus.message}
+                </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {articles.map(article => {
