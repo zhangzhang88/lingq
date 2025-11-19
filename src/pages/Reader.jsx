@@ -23,7 +23,7 @@ const deriveStartIndex = (completed, total) => {
     return Math.min(total - 1, Math.max(0, completed - 1));
 };
 
-const LearningMode = ({ sentences, language, settings, initialCompleted = 0, onProgressChange }) => {
+const LearningMode = ({ sentences, language, settings, initialCompleted = 0, onProgressChange, pureMode = false }) => {
     const initialCache = useMemo(() => buildSentenceTranslationMap(sentences, language), [sentences, language]);
     const total = sentences.length;
     const [index, setIndex] = useState(deriveStartIndex(initialCompleted, total));
@@ -132,7 +132,7 @@ const LearningMode = ({ sentences, language, settings, initialCompleted = 0, onP
                 <span>{index + 1} / {total}</span>
             </div>
             <div className="mb-4">
-                <TextRenderer text={currentSentence} language={language} />
+                <TextRenderer text={currentSentence} language={language} pureMode={pureMode} />
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
                 <button
@@ -187,6 +187,7 @@ export default function Reader() {
     const [validatingProvider, setValidatingProvider] = useState(false);
     const [validationStatus, setValidationStatus] = useState(null);
     const [mode, setMode] = useState('reading');
+    const [pureMode, setPureMode] = useState(false);
     const article = getArticle(id);
     const [completedSentences, setCompletedSentences] = useState(() => (article ? getArticleProgress(article.id) : 0));
 
@@ -230,8 +231,6 @@ export default function Reader() {
         newWords.forEach(word => {
             updateStatus(word, 5); // Mark as known
         });
-
-        alert(`已将 ${newWords.length} 个单词标记为已掌握！`);
     };
 
     const handleValidateApi = async () => {
@@ -354,7 +353,7 @@ export default function Reader() {
             </div>
             <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">{article.title}</h1>
 
-            <div className="mb-4 flex gap-2">
+            <div className="mb-4 flex flex-wrap gap-2">
                 <button
                     onClick={() => setMode('reading')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium border ${mode === 'reading'
@@ -373,11 +372,20 @@ export default function Reader() {
                 >
                     学习模式
                 </button>
+                <button
+                    onClick={() => setPureMode(prev => !prev)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border ${pureMode
+                        ? 'bg-gray-900 text-white border-gray-900 dark:bg-white dark:text-gray-900 dark:border-white'
+                        : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800'
+                    }`}
+                >
+                    纯净模式
+                </button>
             </div>
 
             {mode === 'reading' ? (
                 <div className="prose prose-lg dark:prose-invert max-w-none bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 leading-loose">
-                    <TextRenderer text={article.content} language={article.language} />
+                    <TextRenderer text={article.content} language={article.language} pureMode={pureMode} />
                 </div>
             ) : (
                 <LearningMode
@@ -386,6 +394,7 @@ export default function Reader() {
                     settings={settings}
                     initialCompleted={completedSentences}
                     onProgressChange={handleProgressChange}
+                    pureMode={pureMode}
                 />
             )}
         </div>

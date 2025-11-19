@@ -7,7 +7,7 @@ const WORD_SPLIT_REGEX = /([a-zA-Z0-9À-ÿ]+(?:['’][a-zA-Z0-9À-ÿ]+)*)/;
 const WORD_MATCH_REGEX = /^[a-zA-Z0-9À-ÿ]+(?:['’][a-zA-Z0-9À-ÿ]+)*$/;
 const SENTENCE_BOUNDARY_REGEX = /[.!?;；,，、。！？\n]/;
 
-export default function TextRenderer({ text, language }) {
+export default function TextRenderer({ text, language, pureMode = false }) {
     const { vocabulary, updateStatus, getStatus, getWordData } = useVocabulary();
     const { settings } = useSettings();
     const [selectedWord, setSelectedWord] = useState(null);
@@ -71,6 +71,7 @@ export default function TextRenderer({ text, language }) {
     };
 
     const getWordStyle = (text) => {
+        if (pureMode) return 'bg-transparent text-gray-900 dark:text-gray-100';
         const status = getStatus(text);
         const palette = {
             default: 'bg-blue-100 dark:bg-blue-200 text-[#0b4d78] border border-blue-200 dark:border-blue-300',
@@ -87,13 +88,14 @@ export default function TextRenderer({ text, language }) {
 
     const getTranslationStyle = (status) => {
         const palette = {
-            default: 'bg-blue-100 text-[#0b4d78] border border-blue-200',
-            1: 'bg-[#FBD7DC] text-[#77202d] border border-[#F09FAF]',
-            2: 'bg-[#FDE1BF] text-[#7a3a0c] border border-[#F6B772]',
-            3: 'bg-[#FEF2A7] text-[#7a6507] border border-[#F6D76B]',
-            4: 'bg-[#CFF5D3] text-[#1e6b34] border border-[#8FD9A2]'
+            default: 'bg-blue-100 text-[#0b4d78]',
+            1: 'bg-[#FBD7DC] text-[#77202d]',
+            2: 'bg-[#FDE1BF] text-[#7a3a0c]',
+            3: 'bg-[#FEF2A7] text-[#7a6507]',
+            4: 'bg-[#CFF5D3] text-[#1e6b34]'
         };
 
+        if (pureMode) return 'bg-transparent border-none text-gray-600 dark:text-gray-300';
         if (status === undefined || status === 0) return palette.default;
         if (status >= 1 && status <= 4) return palette[status];
         return palette.default;
@@ -114,7 +116,7 @@ export default function TextRenderer({ text, language }) {
                             key={index}
                             onClick={(e) => isWord && handleWordClick(token, index, e)}
                             className={`
-                                ${isWord ? 'cursor-pointer hover:opacity-80 transition-opacity px-0.5 rounded-sm mx-0.5 inline-block' : ''}
+                                ${isWord ? 'cursor-pointer hover:opacity-80 transition-opacity px-[0.25px] rounded-sm mx-[0.25px] inline-flex items-center leading-tight' : ''}
                                 ${isWord ? getWordStyle(token) : ''}
                                 ${isMarked && settings.showTranslations ? 'relative' : ''}
                             `}
@@ -122,7 +124,7 @@ export default function TextRenderer({ text, language }) {
                             {token}
                             {/* Translation to the right of word */}
                             {isMarked && settings.showTranslations && translation && (
-                                <span className={`ml-1 text-xs font-normal px-1.5 py-0.5 rounded ${getTranslationStyle(status)}`}>
+                                <span className={`ml-0 text-xs font-normal px-1.5 py-0.5 rounded ${getTranslationStyle(status)}`}>
                                     {translation}
                                 </span>
                             )}
