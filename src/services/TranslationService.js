@@ -305,13 +305,12 @@ export const getDictionaryData = async (text, sourceLangName, accent = 'us') => 
 
 // Helper to play audio using browser TTS if file not available
 export const playTextToSpeech = (text, langName, accent = 'us') => {
-    const langCode = getLangCode(langName);
-
-    if (!('speechSynthesis' in window)) {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
         alert('当前浏览器不支持语音朗读。请尝试使用 Chrome、Edge 或 Safari。');
         return;
     }
 
+    const langCode = getLangCode(langName);
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -333,37 +332,47 @@ export const playTextToSpeech = (text, langName, accent = 'us') => {
 
     const preferredKeywords = ['Google', 'Microsoft', 'Apple', 'Premium', 'Enhanced', 'Natural'];
 
-    const assignVoiceAndSpeak = () => {
+    const assignVoice = () => {
         const voices = window.speechSynthesis.getVoices();
-        if (voices.length) {
-            const selectedVoice = voices.find(voice => {
-                if (!voice.lang.toLowerCase().startsWith(targetLang.split('-')[0].toLowerCase())) return false;
-                if (targetLang.includes('-')) {
-                    const localeSuffix = targetLang.split('-')[1].toLowerCase();
-                    if (!voice.lang.toLowerCase().includes(localeSuffix)) return false;
-                }
-                return preferredKeywords.some(keyword => voice.name.includes(keyword));
-            }) || voices.find(voice => voice.lang.toLowerCase().startsWith(targetLang.split('-')[0].toLowerCase()));
+        if (!voices.length) return false;
 
-            if (selectedVoice) utterance.voice = selectedVoice;
+        const base = targetLang.split('-')[0].toLowerCase();
+        const suffix = targetLang.includes('-') ? targetLang.split('-')[1].toLowerCase() : null;
+
+        const selectedVoice = voices.find(voice => {
+            const lang = voice.lang.toLowerCase();
+            if (!lang.startsWith(base)) return false;
+            if (suffix && !lang.includes(suffix)) return false;
+            return preferredKeywords.some(keyword => voice.name.includes(keyword));
+        }) || voices.find(voice => voice.lang.toLowerCase().startsWith(base)) || voices[0];
+
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+            return true;
         }
-
-        window.speechSynthesis.speak(utterance);
+        return false;
     };
 
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length === 0) {
-        const handleVoicesChanged = () => {
-            assignVoiceAndSpeak();
-            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
-        };
-        window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
-        setTimeout(() => {
-            if (window.speechSynthesis.getVoices().length > 0) {
-                handleVoicesChanged();
-            }
-        }, 250);
-    } else {
-        assignVoiceAndSpeak();
+    const speak = () => window.speechSynthesis.speak(utterance);
+
+    if (assignVoice()) {
+        speak();
+        return;
     }
+
+    const handleVoicesChanged = () => {
+        if (assignVoice()) {
+            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+            speak();
+        }
+    };
+
+    window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
+
+    setTimeout(() => {
+        if (assignVoice()) {
+            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+            speak();
+        }
+    }, 500);
 };
