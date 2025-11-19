@@ -129,7 +129,7 @@ export default function Review() {
                         className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors text-sm font-medium"
                     >
                         <span>←</span>
-                        <span>Back to Library</span>
+                        <span>返回主页</span>
                     </Link>
                 </div>
 

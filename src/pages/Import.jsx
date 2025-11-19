@@ -22,7 +22,7 @@ export default function Import() {
 
     return (
         <div className="max-w-2xl mx-auto p-6 text-gray-900 dark:text-gray-100">
-            <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">Import Content</h1>
+            <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">制作课程</h1>
 
             <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
                 <div>
@@ -82,7 +82,7 @@ export default function Import() {
                     type="submit"
                     className="w-full bg-brand-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-700 transition-colors shadow-sm"
                 >
-                    Import Lesson
+                    制作完成
                 </button>
             </form>
         </div>

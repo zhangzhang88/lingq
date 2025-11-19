@@ -5,6 +5,7 @@ import Reader from './pages/Reader';
 import Vocabulary from './pages/Vocabulary';
 import Import from './pages/Import';
 import Review from './pages/Review';
+import Course from './pages/Course';
 import { VocabularyProvider } from './context/VocabularyContext';
 import { ArticleProvider } from './context/ArticleContext';
 import { SettingsProvider } from './context/SettingsContext';
@@ -42,8 +43,8 @@ function AppShell() {
               LingQ
             </Link>
             <div className="flex items-center space-x-4">
-              <Link to="/review" className="text-gray-600 hover:text-brand-600 font-medium dark:text-gray-200 dark:hover:text-brand-300">Review</Link>
-              <Link to="/import" className="text-gray-600 hover:text-brand-600 font-medium dark:text-gray-200 dark:hover:text-brand-300">Import</Link>
+              <Link to="/review" className="text-gray-600 hover:text-brand-600 font-medium dark:text-gray-200 dark:hover:text-brand-300">复习</Link>
+              <Link to="/import" className="text-gray-600 hover:text-brand-600 font-medium dark:text-gray-200 dark:hover:text-brand-300">制作课程</Link>
               <ThemeToggle />
             </div>
           </div>
@@ -55,6 +56,7 @@ function AppShell() {
                 <Route path="/" element={<Library />} />
                 <Route path="/import" element={<Import />} />
                 <Route path="/review" element={<Review />} />
+                <Route path="/course/:courseId" element={<Course />} />
                 <Route path="/read/:id" element={<Reader />} />
                 <Route path="/vocabulary" element={<Vocabulary />} />
               </Routes>

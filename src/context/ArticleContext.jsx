@@ -16,10 +16,11 @@ export function ArticleProvider({ children }) {
     }, [articles]);
 
     const addArticle = (article) => {
+        const defaultImage = 'https://pub-8d9c7b440bdc4316a94cd1a6ec45d0ce.r2.dev/lingq.png';
         const newArticle = {
             ...article,
             id: Date.now(), // Simple ID generation
-            image: article.image || `https://placehold.co/600x400?text=${encodeURIComponent(article.title)}`
+            image: article.image || defaultImage
         };
         setArticles(prev => [newArticle, ...prev]);
     };
