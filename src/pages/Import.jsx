@@ -21,16 +21,16 @@ export default function Import() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-8 text-gray-900">Import Content</h1>
+        <div className="max-w-2xl mx-auto p-6 text-gray-900 dark:text-gray-100">
+            <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-gray-100">Import Content</h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                     <input
                         type="text"
                         required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
                         value={formData.title}
                         onChange={e => setFormData({ ...formData, title: e.target.value })}
                         placeholder="e.g., Daily News"
@@ -39,9 +39,9 @@ export default function Import() {
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
                         <select
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand-500 outline-none"
                             value={formData.language}
                             onChange={e => setFormData({ ...formData, language: e.target.value })}
                         >
@@ -53,9 +53,9 @@ export default function Import() {
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Level</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Level</label>
                         <select
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand-500 outline-none"
                             value={formData.level}
                             onChange={e => setFormData({ ...formData, level: e.target.value })}
                         >
@@ -67,11 +67,11 @@ export default function Import() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
                     <textarea
                         required
                         rows={10}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
+                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
                         value={formData.content}
                         onChange={e => setFormData({ ...formData, content: e.target.value })}
                         placeholder="Paste your text here..."

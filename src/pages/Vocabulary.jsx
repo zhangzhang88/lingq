@@ -40,11 +40,11 @@ export default function Vocabulary() {
 
     const getStatusBadge = (status) => {
         const badges = {
-            1: { color: 'bg-red-100 text-red-700 border-red-200', label: '1 - New' },
-            2: { color: 'bg-orange-100 text-orange-700 border-orange-200', label: '2 - Learning' },
-            3: { color: 'bg-yellow-100 text-yellow-700 border-yellow-200', label: '3 - Familiar' },
-            4: { color: 'bg-green-100 text-green-700 border-green-200', label: '4 - Almost' },
-            5: { color: 'bg-gray-100 text-gray-700 border-gray-200', label: '✓ Known' }
+            1: { color: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-200 dark:border-red-700', label: '1 - New' },
+            2: { color: 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/40 dark:text-orange-200 dark:border-orange-700', label: '2 - Learning' },
+            3: { color: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-200 dark:border-yellow-700', label: '3 - Familiar' },
+            4: { color: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/40 dark:text-green-200 dark:border-green-700', label: '4 - Almost' },
+            5: { color: 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700', label: '✓ Known' }
         };
         const badge = badges[status] || badges[1];
         return (
@@ -109,9 +109,9 @@ export default function Vocabulary() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto p-6">
+        <div className="max-w-6xl mx-auto p-6 text-gray-900 dark:text-gray-100">
             <div className="mb-6">
-                <Link to="/" className="text-gray-500 hover:text-brand-600 transition-colors flex items-center gap-2 text-sm font-medium">
+                <Link to="/" className="text-gray-500 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors flex items-center gap-2 text-sm font-medium">
                     <span>←</span>
                     <span>Back to Library</span>
                 </Link>
@@ -119,8 +119,8 @@ export default function Vocabulary() {
 
             <div className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2 text-gray-800">My Vocabulary</h1>
-                    <p className="text-gray-600">Manage and review your saved words</p>
+                    <h1 className="text-3xl font-bold mb-2 text-gray-800 dark:text-gray-100">My Vocabulary</h1>
+                    <p className="text-gray-600 dark:text-gray-400">Manage and review your saved words</p>
                 </div>
 
                 {stats.missingData > 0 && (
@@ -146,17 +146,17 @@ export default function Vocabulary() {
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-                    <div className="text-2xl font-bold text-gray-800">{stats.total}</div>
-                    <div className="text-sm text-gray-500">Total Words</div>
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
+                    <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{stats.total}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Total Words</div>
                 </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
                     <div className="text-2xl font-bold text-orange-600">{stats.learning}</div>
-                    <div className="text-sm text-gray-500">Learning</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Learning</div>
                 </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
                     <div className="text-2xl font-bold text-green-600">{stats.known}</div>
-                    <div className="text-sm text-gray-500">Known</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Known</div>
                 </div>
             </div>
 
@@ -166,7 +166,7 @@ export default function Vocabulary() {
                     onClick={() => setFilter('all')}
                     className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${filter === 'all'
                         ? 'bg-brand-600 text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
                         }`}
                 >
                     All ({stats.total})
@@ -175,7 +175,7 @@ export default function Vocabulary() {
                     onClick={() => setFilter('learning')}
                     className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${filter === 'learning'
                         ? 'bg-brand-600 text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
                         }`}
                 >
                     Learning ({stats.learning})
@@ -184,7 +184,7 @@ export default function Vocabulary() {
                     onClick={() => setFilter('known')}
                     className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${filter === 'known'
                         ? 'bg-brand-600 text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'
                         }`}
                 >
                     Known ({stats.known})
@@ -192,34 +192,34 @@ export default function Vocabulary() {
             </div>
 
             {/* Vocabulary table */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-left">
-                    <thead className="bg-gray-50 border-b border-gray-100">
+                    <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800">
                         <tr>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Word</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Audio</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Translation</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Phonetic</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Word</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Audio</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Translation</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Phonetic</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Status</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                         {sortedVocab.length > 0 ? (
                             sortedVocab.map(({ word, status, translation, phonetic }) => (
-                                <tr key={word} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4 font-semibold text-gray-900">{word}</td>
+                                <tr key={word} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100">{word}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-1">
                                             <button
                                                 onClick={() => playTextToSpeech(word, 'English', 'us')}
-                                                className="w-7 h-7 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-colors text-xs"
+                                                className="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-200 flex items-center justify-center transition-colors text-xs"
                                                 title="美音"
                                             >
                                                 🇺🇸
                                             </button>
                                             <button
                                                 onClick={() => playTextToSpeech(word, 'English', 'uk')}
-                                                className="w-7 h-7 rounded-full bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition-colors text-xs"
+                                                className="w-7 h-7 rounded-full bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-600 dark:text-red-200 flex items-center justify-center transition-colors text-xs"
                                                 title="英音"
                                             >
                                                 🇬🇧
@@ -235,11 +235,11 @@ export default function Vocabulary() {
                                                 updateStatus(word, status, null, newTranslation, phonetic, 'custom');
                                             }}
                                             placeholder="添加翻译..."
-                                            className="w-full px-2 py-1 text-sm text-gray-600 border border-transparent hover:border-gray-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded transition-colors outline-none"
+                                            className="w-full px-2 py-1 text-sm text-gray-600 dark:text-gray-200 border border-transparent hover:border-gray-300 dark:hover:border-gray-600 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded transition-colors outline-none bg-transparent"
                                         />
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500 text-sm font-mono">
-                                        {phonetic ? `[${phonetic}]` : <span className="text-gray-400 italic">-</span>}
+                                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400 text-sm font-mono">
+                                        {phonetic ? `[${phonetic}]` : <span className="text-gray-400 dark:text-gray-500 italic">-</span>}
                                     </td>
                                     <td className="px-6 py-4">
                                         <select
@@ -248,11 +248,12 @@ export default function Vocabulary() {
                                             className={`
                                                 px-3 py-1.5 rounded-lg text-xs font-semibold border-2 cursor-pointer transition-all
                                                 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1
-                                                ${status === 1 ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100' : ''}
-                                                ${status === 2 ? 'bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100' : ''}
-                                                ${status === 3 ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100' : ''}
-                                                ${status === 4 ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' : ''}
-                                                ${status === 5 ? 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100' : ''}
+                                                dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700
+                                                ${status === 1 ? 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-200 dark:border-red-700' : ''}
+                                                ${status === 2 ? 'bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100 dark:bg-orange-900/30 dark:text-orange-200 dark:border-orange-700' : ''}
+                                                ${status === 3 ? 'bg-yellow-50 text-yellow-700 border-yellow-200 hover:bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-200 dark:border-yellow-700' : ''}
+                                                ${status === 4 ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-200 dark:border-green-700' : ''}
+                                                ${status === 5 ? 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600' : ''}
                                             `}
                                         >
                                             <option value={1}>1 - New</option>
@@ -266,7 +267,7 @@ export default function Vocabulary() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
+                                <td colSpan="5" className="px-6 py-12 text-center text-gray-400 dark:text-gray-500">
                                     No words found
                                 </td>
                             </tr>

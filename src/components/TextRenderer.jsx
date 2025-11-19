@@ -72,33 +72,36 @@ export default function TextRenderer({ text, language }) {
 
     const getWordStyle = (text) => {
         const status = getStatus(text);
-        // Default (New word) = Blue highlight
-        if (status === undefined || status === 0) return 'bg-blue-100 text-blue-900 border-b-2 border-blue-200';
+        const palette = {
+            default: 'bg-blue-100 dark:bg-blue-200 text-[#0b4d78] border border-blue-200 dark:border-blue-300',
+            1: 'bg-[#FBD7DC] text-[#77202d] border border-[#F09FAF]',
+            2: 'bg-[#FDE1BF] text-[#7a3a0c] border border-[#F6B772]',
+            3: 'bg-[#FEF2A7] text-[#7a6507] border border-[#F6D76B]',
+            4: 'bg-[#CFF5D3] text-[#1e6b34] border border-[#8FD9A2]'
+        };
 
-        // Status 1: New/Hard -> Red/Pink
-        if (status === 1) return 'bg-red-100 text-red-900 border-b-2 border-red-200';
-        // Status 2: Learning -> Orange
-        if (status === 2) return 'bg-orange-100 text-orange-900 border-b-2 border-orange-200';
-        // Status 3: Familiar -> Yellow
-        if (status === 3) return 'bg-yellow-100 text-yellow-900 border-b-2 border-yellow-200';
-        // Status 4: Almost Known -> Green
-        if (status === 4) return 'bg-green-100 text-green-900 border-b-2 border-green-200';
-
-        // Known (5) = No highlight
-        return 'bg-transparent text-gray-900';
+        if (status === undefined || status === 0) return palette.default;
+        if (status >= 1 && status <= 4) return palette[status];
+        return 'bg-transparent text-gray-900 dark:text-gray-100';
     };
 
     const getTranslationStyle = (status) => {
-        if (status === 1) return 'bg-red-100 text-red-900 border border-red-200';
-        if (status === 2) return 'bg-orange-100 text-orange-900 border border-orange-200';
-        if (status === 3) return 'bg-yellow-100 text-yellow-900 border border-yellow-200';
-        if (status === 4) return 'bg-green-100 text-green-900 border border-green-200';
-        return 'bg-blue-100 text-blue-900 border border-blue-200';
+        const palette = {
+            default: 'bg-blue-100 text-[#0b4d78] border border-blue-200',
+            1: 'bg-[#FBD7DC] text-[#77202d] border border-[#F09FAF]',
+            2: 'bg-[#FDE1BF] text-[#7a3a0c] border border-[#F6B772]',
+            3: 'bg-[#FEF2A7] text-[#7a6507] border border-[#F6D76B]',
+            4: 'bg-[#CFF5D3] text-[#1e6b34] border border-[#8FD9A2]'
+        };
+
+        if (status === undefined || status === 0) return palette.default;
+        if (status >= 1 && status <= 4) return palette[status];
+        return palette.default;
     };
 
     return (
         <div className="relative" ref={containerRef}>
-            <div className="leading-relaxed text-lg">
+            <div className="leading-relaxed text-lg text-gray-900 dark:text-gray-100">
                 {tokens.map((token, index) => {
                     const isWord = WORD_MATCH_REGEX.test(token);
                     const status = isWord ? getStatus(token) : undefined;

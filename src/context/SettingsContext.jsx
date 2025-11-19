@@ -7,7 +7,8 @@ const defaultSettings = {
     showTranslations: false, // Show translations above marked words
     translationProvider: 'default', // 'default' | 'deepseek'
     deepseekApiKey: '',
-    deepseekModel: 'deepseek-chat'
+    deepseekModel: 'deepseek-chat',
+    theme: 'light'
 };
 
 export function SettingsProvider({ children }) {
@@ -19,6 +20,15 @@ export function SettingsProvider({ children }) {
     useEffect(() => {
         localStorage.setItem('lingq_settings', JSON.stringify(settings));
     }, [settings]);
+
+    useEffect(() => {
+        const root = document.documentElement;
+        if (settings.theme === 'dark') {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
+    }, [settings.theme]);
 
     const updateSetting = (key, value) => {
         setSettings(prev => ({

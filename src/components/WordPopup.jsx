@@ -242,7 +242,7 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
     return (
         <div
             ref={popupRef}
-            className="absolute z-50 bg-white rounded-lg shadow-xl border border-gray-200 p-3 w-64"
+            className="absolute z-50 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-3 w-64"
             style={{
                 top: position.y + 24,
                 left: Math.max(10, position.x - 100) // Keep it somewhat centered but on screen
@@ -252,23 +252,23 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
             <div className="mb-3">
                 <div className="flex justify-between items-start">
                     <div>
-                        <div className="font-bold text-lg text-gray-900 flex items-center gap-2">
+                        <div className="font-bold text-lg text-gray-900 dark:text-gray-100 flex items-center gap-2">
                             {word.text}
                             <button
                                 onClick={handlePlayAudio}
-                                className="text-gray-400 hover:text-brand-600 transition-colors"
+                                className="text-gray-400 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors"
                                 title="Play pronunciation"
                             >
                                 🔊
                             </button>
                         </div>
                         {dictionaryData?.phonetic && (
-                            <div className="text-gray-500 text-sm font-mono mb-1 flex items-center gap-2">
+                            <div className="text-gray-500 dark:text-gray-300 text-sm font-mono mb-1 flex items-center gap-2">
                                 <span>[{dictionaryData.phonetic}]</span>
                                 {language === 'English' && (
                                     <button
                                         onClick={() => updateSetting('accent', settings.accent === 'us' ? 'uk' : 'us')}
-                                        className="text-xs bg-gray-100 px-1.5 py-0.5 rounded hover:bg-gray-200 text-gray-600"
+                                        className="text-xs bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-200"
                                         title="Toggle Accent"
                                     >
                                         {settings.accent.toUpperCase()}
@@ -281,20 +281,20 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
 
                 <div className="min-h-[2rem] mb-2">
                     {loading ? (
-                        <div className="text-gray-400 text-sm animate-pulse">Translating...</div>
+                        <div className="text-gray-400 dark:text-gray-500 text-sm animate-pulse">Translating...</div>
                     ) : (
                         <div>
-                            <div className="text-xs text-gray-500 mb-1 font-medium">翻译</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-300 mb-1 font-medium">翻译</div>
                             <input
                                 type="text"
                                 value={translationData?.text || ''}
                                 onChange={handleTranslationChange}
                                 onBlur={handleManualTranslationSave}
                                 placeholder="添加或编辑翻译..."
-                                className="w-full px-2 py-1.5 text-brand-700 font-medium text-base border border-gray-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded transition-colors outline-none"
+                                className="w-full px-2 py-1.5 text-brand-700 dark:text-brand-200 font-medium text-base border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded transition-colors outline-none"
                             />
                             {formatTranslationSource(translationData?.source || translationData?.provider) && (
-                                <div className="text-xs text-gray-400 mt-1">来源：{formatTranslationSource(translationData?.source || translationData?.provider)}</div>
+                                <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">来源：{formatTranslationSource(translationData?.source || translationData?.provider)}</div>
                             )}
                         </div>
                     )}
@@ -302,16 +302,16 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
 
                 {/* Sentence Context */}
                 {word.sentence && (
-                    <div className="mt-3 pt-3 border-t border-gray-100">
-                        <div className="text-xs text-gray-500 mb-1 font-medium">SENTENCE</div>
-                        <div className="text-sm text-gray-800 italic mb-2 leading-relaxed">
+                    <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 font-medium">SENTENCE</div>
+                        <div className="text-sm text-gray-800 dark:text-gray-200 italic mb-2 leading-relaxed">
                             "{word.sentence.trim()}"
                         </div>
 
                         {sentenceTranslation && (
-                            <div className="text-sm text-brand-700 mb-2 space-y-1">
+                            <div className="text-sm text-brand-700 dark:text-brand-200 mb-2 space-y-1">
                                 {splitIntoSentences(sentenceTranslation).map((line, idx) => (
-                                    <div key={idx} className="bg-brand-50 p-1.5 rounded">
+                                    <div key={idx} className="bg-brand-50 dark:bg-gray-800 p-1.5 rounded">
                                         {line}
                                     </div>
                                 ))}
@@ -321,7 +321,7 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                         <div className="flex gap-2">
                             <button
                                 onClick={handlePlaySentence}
-                                className="text-xs flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded text-gray-700 transition-colors"
+                                className="text-xs flex items-center gap-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-2 py-1 rounded text-gray-700 dark:text-gray-200 transition-colors"
                             >
                                 🔊 Play
                             </button>
@@ -329,7 +329,7 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                                 <button
                                     onClick={handleTranslateSentence}
                                     disabled={loadingSentence}
-                                    className="text-xs flex items-center gap-1 bg-brand-50 hover:bg-brand-100 px-2 py-1 rounded text-brand-700 transition-colors"
+                                    className="text-xs flex items-center gap-1 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 px-2 py-1 rounded text-brand-700 dark:text-brand-200 transition-colors"
                                 >
                                     {loadingSentence ? 'Translating...' : '文 Translate'}
                                 </button>
@@ -338,16 +338,16 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                     </div>
                 )}
 
-                <div className="flex gap-2 text-xs border-t border-gray-100 pt-2 mt-3">
+                <div className="flex gap-2 text-xs border-t border-gray-100 dark:border-gray-800 pt-2 mt-3">
                     <button
                         onClick={() => openExternalTranslate(word.text, language)}
-                        className="text-brand-600 hover:text-brand-800 flex items-center gap-1 font-medium"
+                        className="text-brand-600 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 flex items-center gap-1 font-medium"
                     >
                         Bing (CN)
                     </button>
                     <button
                         onClick={() => openGoogleTranslate(word.text, language)}
-                        className="text-gray-400 hover:text-gray-600 flex items-center gap-1"
+                        className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 flex items-center gap-1"
                     >
                         Google
                     </button>
@@ -371,6 +371,7 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                         }}
                         className={`
                             w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold transition-all hover:scale-110 shadow-sm
+                            text-gray-900
                             ${s.color}
                             ${s.level === 5 ? 'border-2 border-gray-200 hover:border-gray-300' : 'hover:shadow-md'}
                         `}
@@ -381,15 +382,15 @@ export default function WordPopup({ word, position, language, onClose, onUpdateS
                 ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 mb-2">
-                <div className="px-2 py-1 bg-gray-50 rounded border border-gray-200">1（红色）：困难</div>
-                <div className="px-2 py-1 bg-gray-50 rounded border border-gray-200">5（白色）：已知</div>
-                <div className="col-span-2 px-2 py-1 bg-gray-50 rounded border border-gray-200">2~4（橙/黄/绿）：LingQs 熟悉度阶段</div>
+            <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 dark:text-gray-400 mb-2">
+                <div className="px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">1（红色）：困难</div>
+                <div className="px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">5（白色）：已知</div>
+                <div className="col-span-2 px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">2~4（橙/黄/绿）：LingQs 熟悉度阶段</div>
             </div>
 
             {/* Close button (optional, clicking outside usually handles this) */}
             <div className="mt-2 text-right">
-                <button onClick={onClose} className="text-xs text-gray-400 hover:text-gray-600">Close</button>
+                <button onClick={onClose} className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">Close</button>
             </div>
         </div>
     );

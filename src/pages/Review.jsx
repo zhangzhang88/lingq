@@ -88,10 +88,10 @@ export default function Review() {
 
     if (reviewList.length === 0) {
         return (
-            <div className="max-w-2xl mx-auto p-6 text-center pt-20">
+            <div className="max-w-2xl mx-auto p-6 text-center pt-20 text-gray-900 dark:text-gray-100">
                 <div className="text-6xl mb-6">🎉</div>
-                <h1 className="text-3xl font-bold mb-4 text-gray-800">All Caught Up!</h1>
-                <p className="text-gray-600 mb-8 text-lg">You have no words to review right now.</p>
+                <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100">All Caught Up!</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">You have no words to review right now.</p>
                 <Link to="/" className="inline-block bg-brand-600 text-white px-8 py-3 rounded-full font-bold hover:bg-brand-700 transition-colors shadow-lg hover:shadow-xl">
                     Read More Articles
                 </Link>
@@ -101,10 +101,10 @@ export default function Review() {
 
     if (finished) {
         return (
-            <div className="max-w-2xl mx-auto p-6 text-center pt-20">
+            <div className="max-w-2xl mx-auto p-6 text-center pt-20 text-gray-900 dark:text-gray-100">
                 <div className="text-6xl mb-6">🌟</div>
-                <h1 className="text-3xl font-bold mb-4 text-gray-800">Session Complete!</h1>
-                <p className="text-gray-600 mb-8 text-lg">You reviewed {reviewList.length} words today.</p>
+                <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-100">Session Complete!</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">You reviewed {reviewList.length} words today.</p>
                 <button
                     onClick={() => {
                         setFinished(false);
@@ -120,35 +120,35 @@ export default function Review() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-6 flex flex-col items-center min-h-[80vh] justify-center">
+        <div className="max-w-2xl mx-auto p-6 flex flex-col items-center min-h-[80vh] justify-center text-gray-900 dark:text-gray-100">
             <div className="w-full max-w-md">
                 {/* Back button */}
                 <div className="mb-4">
                     <Link
                         to="/"
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-brand-600 transition-colors text-sm font-medium"
+                        className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors text-sm font-medium"
                     >
                         <span>←</span>
                         <span>Back to Library</span>
                     </Link>
                 </div>
 
-                <div className="mb-6 flex justify-between text-sm font-medium text-gray-400 uppercase tracking-wider">
+                <div className="mb-6 flex justify-between text-sm font-medium text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                     <span>Word {currentIndex + 1} / {reviewList.length}</span>
                     <span>Level {currentWord.status}</span>
                 </div>
 
                 {/* Flashcard */}
-                <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 mb-8 min-h-[320px] flex flex-col justify-center">
+                <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8 mb-8 min-h-[320px] flex flex-col justify-center">
                     {/* Word (always visible) */}
                     <div className="text-center mb-6">
-                        <h2 className="text-5xl font-bold text-gray-800 mb-3 tracking-tight">
+                        <h2 className="text-5xl font-bold text-gray-800 dark:text-gray-100 mb-3 tracking-tight">
                             {currentWord.word}
                         </h2>
 
                         {/* Phonetic (if cached or fetched) */}
                         {(currentWord.phonetic || fetchedPhonetic) && (
-                            <div className="text-gray-500 text-lg font-mono mb-4">
+                            <div className="text-gray-500 dark:text-gray-400 text-lg font-mono mb-4">
                                 [{currentWord.phonetic || fetchedPhonetic}]
                             </div>
                         )}
@@ -156,7 +156,7 @@ export default function Review() {
                         {/* Audio button */}
                         <button
                             onClick={handlePlayAudio}
-                            className="w-12 h-12 rounded-full bg-gray-50 hover:bg-brand-50 text-gray-400 hover:text-brand-600 flex items-center justify-center transition-colors mx-auto"
+                            className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 hover:bg-brand-50 dark:hover:bg-brand-900/30 text-gray-400 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 flex items-center justify-center transition-colors mx-auto"
                         >
                             <span className="text-2xl">🔊</span>
                         </button>
@@ -164,25 +164,25 @@ export default function Review() {
 
                     {/* Answer section (shown after clicking) */}
                     {showAnswer && (
-                        <div className="border-t border-gray-100 pt-6 mt-6">
+                        <div className="border-t border-gray-100 dark:border-gray-800 pt-6 mt-6">
                             {loading ? (
-                                <div className="text-center text-gray-400 animate-pulse">
+                                <div className="text-center text-gray-400 dark:text-gray-500 animate-pulse">
                                     Translating...
                                 </div>
                             ) : (currentWord.translation || fetchedTranslation) ? (
                                 <>
-                                    <div className="text-3xl font-medium text-brand-700 mb-4 text-center">
+                                    <div className="text-3xl font-medium text-brand-700 dark:text-brand-300 mb-4 text-center">
                                         {currentWord.translation || fetchedTranslation}
                                     </div>
 
                                     {currentWord.sentence && (
-                                        <div className="text-gray-500 italic text-sm leading-relaxed bg-gray-50 p-4 rounded-xl">
+                                        <div className="text-gray-500 dark:text-gray-300 italic text-sm leading-relaxed bg-gray-50 dark:bg-gray-800 p-4 rounded-xl">
                                             "{currentWord.sentence}"
                                         </div>
                                     )}
                                 </>
                             ) : (
-                                <div className="text-center text-gray-400 text-sm">
+                                <div className="text-center text-gray-400 dark:text-gray-500 text-sm">
                                     Translation not available
                                 </div>
                             )}
@@ -195,10 +195,10 @@ export default function Review() {
                     {showAnswer ? (
                         <div className="grid grid-cols-4 gap-3">
                             {[
-                                { lvl: 1, color: 'bg-red-100 text-red-600 hover:bg-red-200', label: 'Hard' },
-                                { lvl: 2, color: 'bg-orange-100 text-orange-600 hover:bg-orange-200', label: 'So-so' },
-                                { lvl: 3, color: 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200', label: 'Good' },
-                                { lvl: 4, color: 'bg-green-100 text-green-600 hover:bg-green-200', label: 'Easy' }
+                                { lvl: 1, color: 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50', label: 'Hard' },
+                                { lvl: 2, color: 'bg-orange-100 text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-200 dark:hover:bg-orange-900/50', label: 'So-so' },
+                                { lvl: 3, color: 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-200 dark:hover:bg-yellow-900/50', label: 'Good' },
+                                { lvl: 4, color: 'bg-green-100 text-green-600 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-200 dark:hover:bg-green-900/50', label: 'Easy' }
                             ].map((btn) => (
                                 <button
                                     key={btn.lvl}
@@ -216,7 +216,7 @@ export default function Review() {
                     ) : (
                         <button
                             onClick={handleShowAnswer}
-                            className="w-full py-5 bg-gray-900 text-white rounded-2xl font-bold text-lg shadow-lg hover:bg-gray-800 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                            className="w-full py-5 bg-gray-900 text-white rounded-2xl font-bold text-lg shadow-lg hover:bg-gray-800 dark:bg-brand-600 dark:hover:bg-brand-500 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
                         >
                             Show Answer
                         </button>
@@ -225,10 +225,10 @@ export default function Review() {
                     <div className="mt-8 text-center">
                         <button
                             onClick={() => handleNext(5)}
-                            className="text-sm text-gray-400 hover:text-brand-600 font-medium transition-colors flex items-center justify-center gap-2 mx-auto"
+                            className="text-sm text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-300 font-medium transition-colors flex items-center justify-center gap-2 mx-auto"
                         >
                             <span>I know this word</span>
-                            <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">Archive</span>
+                            <span className="bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-xs">Archive</span>
                         </button>
                     </div>
                 </div>

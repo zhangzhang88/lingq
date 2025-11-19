@@ -60,8 +60,8 @@ export default function Library() {
     return (
         <div className="max-w-6xl mx-auto p-6">
             <header className="mb-8  flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-gray-800">Library</h1>
-                <Link to="/vocabulary" className="text-brand-600 hover:underline font-medium">
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Library</h1>
+                <Link to="/vocabulary" className="text-brand-600 dark:text-brand-300 hover:underline font-medium">
                     My Vocabulary
                 </Link>
             </header>
@@ -78,10 +78,10 @@ export default function Library() {
                     return (
                         <div key={article.id} className="group relative">
                             <Link to={`/read/${article.id}`}>
-                                <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
-                                    <div className="h-48 bg-gray-200 relative">
+                                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100 dark:border-gray-800">
+                                    <div className="h-48 bg-gray-200 dark:bg-gray-800 relative">
                                         <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
-                                        <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-bold text-gray-700">
+                                        <div className="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 px-2 py-1 rounded text-xs font-bold text-gray-700 dark:text-gray-100">
                                             {article.language}
                                         </div>
                                         <div className="absolute bottom-2 left-2 right-2 space-y-1 text-[11px] font-medium text-white">
@@ -112,12 +112,12 @@ export default function Library() {
                                         </div>
                                     </div>
                                     <div className="p-4">
-                                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-brand-600 transition-colors">
+                                        <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 group-hover:text-brand-600 transition-colors">
                                             {article.title}
                                         </h3>
-                                        <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-                                            <span className="text-brand-600 font-medium">{stats.newPercent}% 新词</span>
-                                            <span>{article.level}</span>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
+                                            <span className="text-brand-600 dark:text-brand-300 font-medium">{stats.newPercent}% 新词</span>
+                                            <span className="text-gray-600 dark:text-gray-300">{article.level}</span>
                                         </p>
                                     </div>
                                 </div>
