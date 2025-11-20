@@ -83,7 +83,7 @@ export default function Library() {
     };
 
     const handleResetCourses = () => {
-        if (window.confirm('此操作会清除你保存的课程，请先导出备份。确定要更新到最新课程吗？')) {
+        if (window.confirm('此操作会清除你保存的课程，请先在左侧导出备份，点击“导出数据”。确定要更新到最新课程吗？')) {
             localStorage.removeItem('lingq_articles');
             window.location.reload();
         }
