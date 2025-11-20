@@ -8,7 +8,7 @@ const defaultSettings = {
     translationProvider: 'default', // 'default' | 'deepseek'
     deepseekApiKey: '',
     deepseekModel: 'deepseek-chat',
-    theme: 'light'
+    theme: 'dark'
 };
 
 export function SettingsProvider({ children }) {
