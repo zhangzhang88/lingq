@@ -82,6 +82,13 @@ export default function Library() {
         reader.readAsText(file);
     };
 
+    const handleResetCourses = () => {
+        if (window.confirm('此操作会清除你保存的课程，请先导出备份。确定要更新到最新课程吗？')) {
+            localStorage.removeItem('lingq_articles');
+            window.location.reload();
+        }
+    };
+
     return (
         <div className="max-w-6xl mx-auto p-6">
             <header className="mb-8  flex justify-between items-center">
@@ -108,6 +115,12 @@ export default function Library() {
                         className="px-4 py-2 text-sm font-medium rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                         导入数据
+                    </button>
+                    <button
+                        onClick={handleResetCourses}
+                        className="px-4 py-2 text-sm font-medium rounded-lg border border-red-500 text-red-600 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                        点击这里更新到最新课程
                     </button>
                     <input
                         type="file"
