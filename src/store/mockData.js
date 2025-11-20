@@ -1,7 +1,9 @@
+import { miniStories } from './miniStories';
+
 const COURSE_ID = 'seven-secrets';
 const COURSE_TITLE = 'The Seven Secrets to Successful Language Learning';
 
-export const mockArticles = [
+const sevenSecretsArticles = [
     {
         id: 1,
         title: "1 – Spend the Time",
@@ -230,6 +232,11 @@ We do divide our content, our lessons into levels of difficulty, but within each
 Thank you for listening to this series and goodbye for now.`,
         image: "https://pub-8d9c7b440bdc4316a94cd1a6ec45d0ce.r2.dev/lingq.png"
     }
+];
+
+export const mockArticles = [
+    ...sevenSecretsArticles,
+    ...miniStories
 ];
 
 export const mockVocabulary = {

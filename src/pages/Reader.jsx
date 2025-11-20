@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useArticles } from '../context/ArticleContext';
 import { useSettings } from '../context/SettingsContext';
 import { useVocabulary } from '../context/VocabularyContext';
@@ -181,6 +181,7 @@ const LearningMode = ({ sentences, language, settings, initialCompleted = 0, onP
 
 export default function Reader() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const { getArticle } = useArticles();
     const { settings, updateSetting } = useSettings();
     const { vocabulary, updateStatus, getStatus } = useVocabulary();
@@ -269,7 +270,18 @@ export default function Reader() {
     return (
         <div className="max-w-4xl mx-auto p-6 text-gray-900 dark:text-gray-100">
             <div className="mb-6 flex justify-between items-center">
-                <Link to="/course/seven-secrets" className="text-gray-500 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">← 返回上一页</Link>
+                <button
+                    onClick={() => {
+                        if (window.history.length > 1) {
+                            navigate(-1);
+                        } else {
+                            navigate('/');
+                        }
+                    }}
+                    className="text-gray-500 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors text-sm font-medium"
+                >
+                    ← 返回上一页
+                </button>
 
                 <div className="flex gap-2">
                     {/* Mark all as known button */}

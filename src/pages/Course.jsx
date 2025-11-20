@@ -37,7 +37,7 @@ export default function Course() {
             <p className="text-gray-500 dark:text-gray-400 mb-8">选择一节开始学习。</p>
 
             <div className="space-y-4">
-                {courseArticles.map(article => {
+                {courseArticles.map((article, index) => {
                     const stats = getArticleStats(article, getStatus);
                     const sentences = splitSentences(article.content);
                     const completed = getArticleProgress(article.id);
@@ -47,6 +47,14 @@ export default function Course() {
                     return (
                         <Link key={article.id} to={`/read/${article.id}`} className="block bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                             <div className="p-4 md:p-6 flex flex-col md:flex-row gap-4">
+                                <div className="w-full md:w-32 h-32 rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 relative flex-shrink-0">
+                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-16 h-16 rounded-full bg-black/60 flex items-center justify-center text-2xl font-bold text-amber-300">
+                                            {index + 1}
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="flex-1">
                                     <p className="text-sm text-gray-500 dark:text-gray-400">Lesson</p>
                                     <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{article.title}</h2>
