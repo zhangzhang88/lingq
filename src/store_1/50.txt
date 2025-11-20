@@ -1,5 +1,4 @@
- 
-50 - University Schedule 
+ 50 - University Schedule 
 
 
 Marty has been organizing his university schedule.
