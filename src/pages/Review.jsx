@@ -195,10 +195,10 @@ export default function Review() {
                     {showAnswer ? (
                         <div className="grid grid-cols-4 gap-3">
                             {[
-                                { lvl: 1, color: 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50', label: 'Hard' },
-                                { lvl: 2, color: 'bg-orange-100 text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-200 dark:hover:bg-orange-900/50', label: 'So-so' },
-                                { lvl: 3, color: 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-200 dark:hover:bg-yellow-900/50', label: 'Good' },
-                                { lvl: 4, color: 'bg-green-100 text-green-600 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-200 dark:hover:bg-green-900/50', label: 'Easy' }
+                                { lvl: 1, color: 'bg-red-100 text-red-600 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-200 dark:hover:bg-red-900/50', label: '困难' },
+                                { lvl: 2, color: 'bg-orange-100 text-orange-600 hover:bg-orange-200 dark:bg-orange-900/30 dark:text-orange-200 dark:hover:bg-orange-900/50', label: '一般' },
+                                { lvl: 3, color: 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-200 dark:hover:bg-yellow-900/50', label: '良好' },
+                                { lvl: 4, color: 'bg-green-100 text-green-600 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-200 dark:hover:bg-green-900/50', label: '容易' }
                             ].map((btn) => (
                                 <button
                                     key={btn.lvl}
