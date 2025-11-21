@@ -303,76 +303,95 @@ export const getDictionaryData = async (text, sourceLangName, accent = 'us') => 
     };
 };
 
-// Helper to play audio using browser TTS if file not available
-export const playTextToSpeech = (text, langName, accent = 'us') => {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
-        alert('当前浏览器不支持语音朗读。请尝试使用 Chrome、Edge 或 Safari。');
+const EDGE_TTS_ENDPOINT = import.meta.env.VITE_TTS_ENDPOINT;
+const EDGE_TTS_API_KEY = import.meta.env.VITE_TTS_API_KEY;
+
+const voicePreferences = {
+    en: { us: 'en-US-AvaNeural', uk: 'en-GB-SoniaNeural' },
+    fr: 'fr-FR-DeniseNeural',
+    es: 'es-ES-ElviraNeural',
+    de: 'de-DE-KatjaNeural',
+    'zh': 'zh-CN-XiaoxiaoMultilingualNeural',
+    'zh-Hans': 'zh-CN-XiaoxiaoMultilingualNeural',
+    ja: 'ja-JP-NanamiNeural',
+    ko: 'ko-KR-SunHiNeural',
+    it: 'it-IT-ElsaNeural',
+    ru: 'ru-RU-DmitryNeural',
+    pt: 'pt-BR-FranciscaNeural'
+};
+
+let activeAudioInstance = null;
+
+const getVoiceForLang = (langCode, accent) => {
+    const config = voicePreferences[langCode];
+    if (!config) return voicePreferences.en.us;
+    if (typeof config === 'string') return config;
+    return config[accent] || config.us || config.uk || voicePreferences.en.us;
+};
+
+// Helper to play audio using self-hosted Edge TTS compatible API
+export const playTextToSpeech = async (text, langName, accent = 'us') => {
+    if (typeof window === 'undefined' || typeof Audio === 'undefined') {
+        alert('当前环境不支持语音朗读。请在浏览器中使用。');
         return;
+    }
+
+    const content = (text || '').trim();
+    if (!content) return;
+
+    if (activeAudioInstance) {
+        activeAudioInstance.pause();
+        activeAudioInstance = null;
     }
 
     const langCode = getLangCode(langName);
-    window.speechSynthesis.cancel();
+    const voice = getVoiceForLang(langCode, accent);
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const localeMap = {
-        'en': accent === 'uk' ? 'en-GB' : 'en-US',
-        'fr': 'fr-FR',
-        'es': 'es-ES',
-        'de': 'de-DE',
-        'zh': 'zh-CN',
-        'ja': 'ja-JP',
-        'ko': 'ko-KR',
-        'it': 'it-IT',
-        'ru': 'ru-RU'
-    };
-    const targetLang = localeMap[langCode] || langCode;
-    utterance.lang = targetLang;
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-
-    const preferredKeywords = ['Google', 'Microsoft', 'Apple', 'Premium', 'Enhanced', 'Natural'];
-
-    const assignVoice = () => {
-        const voices = window.speechSynthesis.getVoices();
-        if (!voices.length) return false;
-
-        const base = targetLang.split('-')[0].toLowerCase();
-        const suffix = targetLang.includes('-') ? targetLang.split('-')[1].toLowerCase() : null;
-
-        const selectedVoice = voices.find(voice => {
-            const lang = voice.lang.toLowerCase();
-            if (!lang.startsWith(base)) return false;
-            if (suffix && !lang.includes(suffix)) return false;
-            return preferredKeywords.some(keyword => voice.name.includes(keyword));
-        }) || voices.find(voice => voice.lang.toLowerCase().startsWith(base)) || voices[0];
-
-        if (selectedVoice) {
-            utterance.voice = selectedVoice;
-            return true;
-        }
-        return false;
-    };
-
-    const speak = () => window.speechSynthesis.speak(utterance);
-
-    if (assignVoice()) {
-        speak();
+    if (!EDGE_TTS_ENDPOINT || !EDGE_TTS_API_KEY) {
+        console.error('TTS configuration missing. Ensure VITE_TTS_ENDPOINT and VITE_TTS_API_KEY are set.');
+        alert('语音服务未配置，请联系管理员。');
         return;
     }
 
-    const handleVoicesChanged = () => {
-        if (assignVoice()) {
-            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
-            speak();
-        }
-    };
+    try {
+        const response = await fetch(EDGE_TTS_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${EDGE_TTS_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'tts-1',
+                voice,
+                input: content,
+                response_format: 'mp3'
+            })
+        });
 
-    window.speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
-
-    setTimeout(() => {
-        if (assignVoice()) {
-            window.speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
-            speak();
+        if (!response.ok) {
+            console.error('Edge TTS request failed:', await response.text());
+            alert('语音服务暂时不可用，请稍后再试。');
+            return;
         }
-    }, 500);
+
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        activeAudioInstance = audio;
+
+        const cleanup = () => {
+            URL.revokeObjectURL(audioUrl);
+            if (activeAudioInstance === audio) {
+                activeAudioInstance = null;
+            }
+        };
+
+        audio.addEventListener('ended', cleanup, { once: true });
+        audio.addEventListener('error', cleanup, { once: true });
+
+        await audio.play();
+    } catch (error) {
+        console.error('Failed to play Edge TTS audio:', error);
+        alert('语音服务调用失败，请检查网络连接。');
+    }
 };

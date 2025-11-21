@@ -143,3 +143,5 @@ src/
 把课程数据，保存在文件夹（store_1）的txt后，再跟AI对话：例如
 
 首页我需要增加1个课程名称叫： Mini Stories，点击进入才是这60个课程放在这个文件夹下面/Users/world/Downloads/code/lingq/src/store_1，下面有60个课程，语言：英语 等级：初级，图片：https://pub-8d9c7b440bdc4316a94cd1a6ec45d0ce.r2.dev/lingq.png，同样里面的60个课程，每个课程的图片中间加上对应的数字水印的效果
+
+/Users/world/Downloads/code/lingq/src/store_1这里面有60个txt，每个txt里面有一篇文章的标题和内容，为什么没有出现在我网页里面http://localhost:5173/course/mini-stories ，这里打开里面的60个课程后，是空的，没数据
